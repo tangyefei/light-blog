@@ -34,3 +34,9 @@
 | 条目标题 | 文件 | 描述 |
 |---------|------|------|
 | 项目目录结构 | configurations/项目目录结构.md | 包结构约定：entity/mapper/service/controller/dto/common/config |
+
+### code-patterns（代码模式）
+
+| 条目标题 | 文件 | 描述 |
+|---------|------|------|
+| Result-统一响应封装 | code-patterns/Result-统一响应封装.md | Result<T> + ResultCode 枚举，@Getter 不可变设计，多重载工厂方法 |
