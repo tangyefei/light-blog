@@ -37,6 +37,14 @@ public class GlobalExceptionHandler {
     /**
      * 处理其他未知异常
      */
+    @ExceptionHandler(BusinessException.class)
+    public Result<Void> handleException(BusinessException exception) {
+        return Result.fail(exception.getCode(), "业务异常：" + exception.getMessage());
+    }
+
+    /**
+     * 处理其他未知异常
+     */
     @ExceptionHandler(Exception.class)
     public Result<Void> handleException(Exception exception) {
         return Result.fail(500, "服务器内部错误：" + exception.getMessage());

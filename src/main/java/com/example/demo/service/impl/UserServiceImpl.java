@@ -1,6 +1,7 @@
 package com.example.demo.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.example.demo.common.BusinessException;
 import com.example.demo.dto.LoginRequest;
 import com.example.demo.dto.LoginResponse;
 import com.example.demo.dto.RegisterRequest;
@@ -31,7 +32,7 @@ public class UserServiceImpl implements UserService {
                 new LambdaQueryWrapper<User>().eq(User::getUsername, request.getUsername())
         );
         if (usernameCount > 0) {
-            throw new IllegalArgumentException("用户名已存在");
+            throw new BusinessException(409, "用户名已存在");
         }
 
         // 校验邮箱唯一性
@@ -39,7 +40,7 @@ public class UserServiceImpl implements UserService {
                 new LambdaQueryWrapper<User>().eq(User::getEmail, request.getEmail())
         );
         if (emailCount > 0) {
-            throw new IllegalArgumentException("邮箱已被注册");
+            throw new BusinessException(409, "邮箱已被注册");
         }
 
         // 构建用户实体，密码 BCrypt 加密
@@ -66,12 +67,12 @@ public class UserServiceImpl implements UserService {
         );
 
         if (user == null) {
-            throw new IllegalArgumentException("用户不存在");
+            throw new BusinessException(401, "用户不存在");
         }
 
         // 验证密码
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new IllegalArgumentException("密码错误");
+            throw new BusinessException(401, "密码错误");
         }
 
         // 生成 UUID Token 并更新到数据库
