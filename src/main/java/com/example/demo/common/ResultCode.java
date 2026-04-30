@@ -16,6 +16,7 @@ public enum ResultCode {
     UNAUTHORIZED(401, "未登录或 Token 已失效"),
     FORBIDDEN(403, "无权限访问"),
     NOT_FOUND(404, "资源不存在"),
+    CONFLICT(409, "资源已存在"),
 
     // ==================== 服务端错误 5xx ====================
     INTERNAL_ERROR(500, "服务器内部错误");

@@ -2,6 +2,7 @@ package com.example.demo.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.example.demo.common.BusinessException;
+import com.example.demo.common.ResultCode;
 import com.example.demo.dto.LoginRequest;
 import com.example.demo.dto.LoginResponse;
 import com.example.demo.dto.RegisterRequest;
@@ -10,7 +11,6 @@ import com.example.demo.mapper.UserMapper;
 import com.example.demo.service.UserService;
 import com.example.demo.utils.JwtUtils;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -23,11 +23,9 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    @Autowired
-    private JwtUtils jwtUtils;
-
     private final UserMapper userMapper;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final JwtUtils jwtUtils;
 
     @Override
     public void register(RegisterRequest request) {
@@ -36,7 +34,7 @@ public class UserServiceImpl implements UserService {
                 new LambdaQueryWrapper<User>().eq(User::getUsername, request.getUsername())
         );
         if (usernameCount > 0) {
-            throw new BusinessException(409, "用户名已存在");
+            throw new BusinessException(ResultCode.CONFLICT, "用户名已存在");
         }
 
         // 校验邮箱唯一性
@@ -44,7 +42,7 @@ public class UserServiceImpl implements UserService {
                 new LambdaQueryWrapper<User>().eq(User::getEmail, request.getEmail())
         );
         if (emailCount > 0) {
-            throw new BusinessException(409, "邮箱已被注册");
+            throw new BusinessException(ResultCode.CONFLICT, "邮箱已被注册");
         }
 
         // 构建用户实体，密码 BCrypt 加密
@@ -71,12 +69,12 @@ public class UserServiceImpl implements UserService {
         );
 
         if (user == null) {
-            throw new BusinessException(401, "用户不存在");
+            throw new BusinessException(ResultCode.UNAUTHORIZED, "账号或密码错误");
         }
 
         // 验证密码
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new BusinessException(401, "密码错误");
+            throw new BusinessException(ResultCode.UNAUTHORIZED, "账号或密码错误");
         }
 
         // 生成 JWT Token（无状态，无需写库）

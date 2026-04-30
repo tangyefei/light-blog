@@ -23,30 +23,30 @@ public class GlobalExceptionHandler {
                 .stream()
                 .map(FieldError::getDefaultMessage)
                 .collect(Collectors.joining("; "));
-        return Result.fail(errorMessage);
+        return Result.fail(ResultCode.BAD_REQUEST, errorMessage);
     }
 
     /**
-     * 处理业务逻辑异常（用户名重复、密码错误等）
+     * 处理业务异常（用户名重复、密码错误等）
+     */
+    @ExceptionHandler(BusinessException.class)
+    public Result<Void> handleBusinessException(BusinessException exception) {
+        return Result.fail(exception.getCode(), exception.getMessage());
+    }
+
+    /**
+     * 处理非法参数异常
      */
     @ExceptionHandler(IllegalArgumentException.class)
     public Result<Void> handleIllegalArgumentException(IllegalArgumentException exception) {
-        return Result.fail(exception.getMessage());
+        return Result.fail(ResultCode.BAD_REQUEST, exception.getMessage());
     }
 
     /**
-     * 处理其他未知异常
-     */
-    @ExceptionHandler(BusinessException.class)
-    public Result<Void> handleException(BusinessException exception) {
-        return Result.fail(exception.getCode(), "业务异常：" + exception.getMessage());
-    }
-
-    /**
-     * 处理其他未知异常
+     * 处理其他未知异常（兜底）
      */
     @ExceptionHandler(Exception.class)
     public Result<Void> handleException(Exception exception) {
-        return Result.fail(500, "服务器内部错误：" + exception.getMessage());
+        return Result.fail(ResultCode.INTERNAL_ERROR, "服务器内部错误：" + exception.getMessage());
     }
 }
