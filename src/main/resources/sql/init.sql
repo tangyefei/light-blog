@@ -16,7 +16,6 @@ CREATE TABLE IF NOT EXISTS `user` (
     `password`   VARCHAR(100) NOT NULL COMMENT '密码（BCrypt 加密）',
     `email`      VARCHAR(100) NOT NULL COMMENT '邮箱（唯一）',
     `avatar`     VARCHAR(255) DEFAULT NULL COMMENT '头像 URL',
-    `token`      VARCHAR(64)  DEFAULT NULL COMMENT '登录 Token（UUID，暂存于数据库）',
     `created_at` DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `updated_at` DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     PRIMARY KEY (`id`),

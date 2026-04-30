@@ -90,6 +90,29 @@
 			<version>4.0.1</version>
 			<scope>test</scope>
 		</dependency>
+
+		<!-- JWT 工具库（jjwt） -->
+		<!-- jjwt-api：核心接口，编译时需要 -->
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-api</artifactId>
+			<version>0.12.5</version>
+		</dependency>
+		<!-- jjwt-impl：默认实现，运行时加载，不需要直接调用 -->
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-impl</artifactId>
+			<version>0.12.5</version>
+			<scope>runtime</scope>
+		</dependency>
+		<!-- jjwt-jackson：用 Jackson 做 JSON 序列化，运行时加载 -->
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt-jackson</artifactId>
+			<version>0.12.5</version>
+			<scope>runtime</scope>
+		</dependency>
+
 	</dependencies>
 
 	<build>

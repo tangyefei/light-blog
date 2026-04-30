@@ -41,11 +41,6 @@ public class User {
     private String avatar;
 
     /**
-     * 登录 Token（UUID，暂存于数据库）
-     */
-    private String token;
-
-    /**
      * 创建时间
      */
     private LocalDateTime createdAt;

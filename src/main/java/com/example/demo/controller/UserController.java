@@ -1,9 +1,11 @@
 package com.example.demo.controller;
 
 import com.example.demo.common.Result;
+import com.example.demo.context.UserContext;
 import com.example.demo.dto.LoginRequest;
 import com.example.demo.dto.LoginResponse;
 import com.example.demo.dto.RegisterRequest;
+import com.example.demo.entity.User;
 import com.example.demo.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -17,9 +19,9 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
-@RestControllerAdvice
 @Tag(name = "用户模块", description = "用户注册、登录相关接口")
 public class UserController {
+
 
     private final UserService userService;
 
@@ -35,5 +37,14 @@ public class UserController {
     public Result<LoginResponse> login(@Valid @RequestBody LoginRequest request) {
         LoginResponse response = userService.login(request);
         return Result.success(response);
+    }
+
+    @GetMapping("/me")
+    @Operation(summary = "获取当前用户信息", description = "获取当前用户信息")
+    public Result<User> me() {
+        Long userId = UserContext.getUserId();
+        User user = userService.getById(userId);
+        return Result.success(user);
+
     }
 }

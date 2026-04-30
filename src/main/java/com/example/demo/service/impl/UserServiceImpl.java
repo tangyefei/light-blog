@@ -8,12 +8,13 @@ import com.example.demo.dto.RegisterRequest;
 import com.example.demo.entity.User;
 import com.example.demo.mapper.UserMapper;
 import com.example.demo.service.UserService;
+import com.example.demo.utils.JwtUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 /**
  * 用户服务实现类
@@ -21,6 +22,9 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
+
+    @Autowired
+    private JwtUtils jwtUtils;
 
     private final UserMapper userMapper;
     private final BCryptPasswordEncoder passwordEncoder;
@@ -75,11 +79,8 @@ public class UserServiceImpl implements UserService {
             throw new BusinessException(401, "密码错误");
         }
 
-        // 生成 UUID Token 并更新到数据库
-        String token = UUID.randomUUID().toString().replace("-", "");
-        user.setToken(token);
-        user.setUpdatedAt(LocalDateTime.now());
-        userMapper.updateById(user);
+        // 生成 JWT Token（无状态，无需写库）
+        String token = jwtUtils.generateToken(user.getId(), user.getUsername());
 
         // 构建响应
         LoginResponse response = new LoginResponse();
@@ -90,5 +91,10 @@ public class UserServiceImpl implements UserService {
         response.setToken(token);
 
         return response;
+    }
+
+    @Override
+    public User getById(Long id) {
+        return userMapper.selectById(id);
     }
 }
