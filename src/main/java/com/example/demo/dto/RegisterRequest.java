@@ -27,4 +27,10 @@ public class RegisterRequest {
     @Email(message = "邮箱格式不正确")
     @Schema(description = "邮箱", example = "zhangsan@example.com")
     private String email;
+
+    public RegisterRequest(String name, String password, String email) {
+        this.username = name;
+        this.password = password;
+        this.email = email;
+    }
 }

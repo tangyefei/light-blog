@@ -28,7 +28,7 @@ public class UserServiceImpl implements UserService {
     private final JwtUtils jwtUtils;
 
     @Override
-    public void register(RegisterRequest request) {
+    public Boolean register(RegisterRequest request) {
         // 校验用户名唯一性
         Long usernameCount = userMapper.selectCount(
                 new LambdaQueryWrapper<User>().eq(User::getUsername, request.getUsername())
@@ -54,6 +54,8 @@ public class UserServiceImpl implements UserService {
         user.setUpdatedAt(LocalDateTime.now());
 
         userMapper.insert(user);
+
+        return true;
     }
 
     @Override

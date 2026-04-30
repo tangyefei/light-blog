@@ -15,7 +15,7 @@ public interface UserService {
      *
      * @param request 注册请求参数
      */
-    void register(RegisterRequest request);
+    Boolean register(RegisterRequest request);
 
     /**
      * 用户登录
