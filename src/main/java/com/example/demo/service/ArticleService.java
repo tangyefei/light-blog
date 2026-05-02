@@ -1,7 +1,7 @@
 package com.example.demo.service;
 
-import com.example.demo.entity.Article;
 import com.example.demo.vo.ArticleAddVo;
+import com.example.demo.vo.ArticleResponseVo;
 
 /**
  * 文章服务接口
@@ -22,5 +22,5 @@ public interface ArticleService {
      * @param id 文章 ID
      * @return 文章详情
      */
-    Article getById(Long id);
+    ArticleResponseVo getById(Long id);
 }

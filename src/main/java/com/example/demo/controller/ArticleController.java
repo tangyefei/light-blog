@@ -1,9 +1,9 @@
 package com.example.demo.controller;
 
 import com.example.demo.common.Result;
-import com.example.demo.entity.Article;
 import com.example.demo.service.ArticleService;
 import com.example.demo.vo.ArticleAddVo;
+import com.example.demo.vo.ArticleResponseVo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -30,8 +30,8 @@ public class ArticleController {
 
     @GetMapping("/{id}")
     @Operation(summary = "查询文章详情", description = "根据文章 ID 查询文章详情")
-    public Result<Article> getById(@PathVariable Long id) {
-        Article article = articleService.getById(id);
+    public Result<ArticleResponseVo> getById(@PathVariable Long id) {
+        ArticleResponseVo article = articleService.getById(id);
         return Result.success(article);
     }
 }
