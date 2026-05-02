@@ -27,20 +27,24 @@ public class UserController {
 
     @PostMapping("/register")
     @Operation(summary = "用户注册", description = "注册新用户，用户名和邮箱需唯一，密码长度不少于 6 位")
-    public Result<Void> register(@Valid @RequestBody RegisterRequest request) {
+    public Result<Void> register(
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "用户注册请求参数", required = true)
+            @Valid @RequestBody RegisterRequest request) {
         userService.register(request);
         return Result.success();
     }
 
     @PostMapping("/login")
-    @Operation(summary = "用户登录", description = "支持用户名或邮箱登录，登录成功返回 UUID Token")
-    public Result<LoginResponse> login(@Valid @RequestBody LoginRequest request) {
+    @Operation(summary = "用户登录", description = "支持用户名或邮箱登录，登录成功返回 JWT Token")
+    public Result<LoginResponse> login(
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "用户登录请求参数", required = true)
+            @Valid @RequestBody LoginRequest request) {
         LoginResponse response = userService.login(request);
         return Result.success(response);
     }
 
     @GetMapping("/me")
-    @Operation(summary = "获取当前用户信息", description = "获取当前用户信息")
+    @Operation(summary = "获取当前用户信息", description = "获取当前登录用户的基本信息")
     public Result<User> me() {
         Long userId = UserContext.getUserId();
         User user = userService.getById(userId);

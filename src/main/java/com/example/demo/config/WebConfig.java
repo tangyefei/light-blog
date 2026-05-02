@@ -3,6 +3,7 @@ package com.example.demo.config;
 import com.example.demo.interceptor.JwtInterceptor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -14,6 +15,24 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebConfig implements WebMvcConfigurer {
 
     private final JwtInterceptor jwtInterceptor;
+
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        // 对所有后端接口启用跨域配置。
+        registry.addMapping("/**")
+                // 只允许本地前端开发服务访问后端接口。
+                .allowedOrigins("http://localhost:3000")
+                // 允许前端使用常见的接口请求方法，并允许浏览器预检请求。
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                // 允许前端携带任意请求头，例如 Content-Type 和 Authorization。
+                .allowedHeaders("*")
+                // 如果响应里包含 Authorization，允许前端代码读取该响应头。
+                .exposedHeaders("Authorization")
+                // 允许请求携带凭证信息，例如 Cookie 或认证相关请求头。
+                .allowCredentials(true)
+                // 预检请求结果缓存 3600 秒，减少浏览器重复发送 OPTIONS 请求。
+                .maxAge(3600);
+    }
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {

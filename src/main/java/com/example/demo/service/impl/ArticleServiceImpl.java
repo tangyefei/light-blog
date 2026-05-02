@@ -125,7 +125,6 @@ public class ArticleServiceImpl implements ArticleService {
                 .like(StringUtils.hasText(request.getTitle()), Article::getTitle, request.getTitle())
                 // 分类 ID 有值时，只查询该分类下的文章。
                 .eq(request.getCategoryId() != null, Article::getCategoryId, request.getCategoryId())
-                .eq(request.getTagId() != null, Article::getId, request.getTagId())
                 // 状态有值时，将前端状态值转换为枚举后再查询。
                 .eq(request.getStatus() != null, Article::getStatus, request.getStatus() == null ? null : ArticleStatus.fromCode(request.getStatus()))
                 .orderByDesc(Article::getCreatedAt);
@@ -148,6 +147,11 @@ public class ArticleServiceImpl implements ArticleService {
         Page<Article> page = new Page<>(request.getPageNum(), request.getPageSize());
         LambdaQueryWrapper<Article> query = new LambdaQueryWrapper<Article>()
                 .eq(true, Article::getUserId, UserContext.getUserId())
+                .like(StringUtils.hasText(request.getTitle()), Article::getTitle, request.getTitle())
+                // 分类 ID 有值时，只查询该分类下的文章。
+                .eq(request.getCategoryId() != null, Article::getCategoryId, request.getCategoryId())
+                // 状态有值时，将前端状态值转换为枚举后再查询。
+                .eq(request.getStatus() != null, Article::getStatus, request.getStatus() == null ? null : ArticleStatus.fromCode(request.getStatus()))
                 .orderByDesc(Article::getCreatedAt);
 
         Page<Article> articlePage = articleMapper.selectPage(page, query);

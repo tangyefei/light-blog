@@ -35,7 +35,9 @@ public class TagController {
 
     @PostMapping("/add")
     @Operation(summary = "新增标签", description = "新增文章标签，标签名称不可重复")
-    public Result<Long> add(@Valid @RequestBody TagAddVo request) {
+    public Result<Long> add(
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "新增标签请求参数", required = true)
+            @Valid @RequestBody TagAddVo request) {
         Long id = tagService.add(request);
         return Result.success(id);
     }
