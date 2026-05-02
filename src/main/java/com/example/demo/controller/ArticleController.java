@@ -1,7 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.common.Result;
-import com.example.demo.common.ResultCode;
+import com.example.demo.entity.Article;
 import com.example.demo.service.ArticleService;
 import com.example.demo.vo.ArticleAddVo;
 import io.swagger.v3.oas.annotations.Operation;
@@ -26,5 +26,12 @@ public class ArticleController {
     public Result<Long> add(@Valid @RequestBody ArticleAddVo request) {
         Long id = articleService.add(request);
         return Result.success(id);
+    }
+
+    @GetMapping("/{id}")
+    @Operation(summary = "查询文章详情", description = "根据文章 ID 查询文章详情")
+    public Result<Article> getById(@PathVariable Long id) {
+        Article article = articleService.getById(id);
+        return Result.success(article);
     }
 }

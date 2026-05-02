@@ -1,31 +1,22 @@
 package com.example.demo.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.demo.common.BusinessException;
 import com.example.demo.common.ResultCode;
 import com.example.demo.context.UserContext;
-import com.example.demo.dto.LoginRequest;
-import com.example.demo.dto.LoginResponse;
-import com.example.demo.dto.RegisterRequest;
 import com.example.demo.entity.Article;
 import com.example.demo.entity.ArticleTag;
-import com.example.demo.entity.User;
 import com.example.demo.enums.ArticleStatus;
 import com.example.demo.mapper.ArticleMapper;
 import com.example.demo.mapper.ArticleTagMapper;
-import com.example.demo.mapper.UserMapper;
 import com.example.demo.service.ArticleService;
-import com.example.demo.service.UserService;
-import com.example.demo.utils.JwtUtils;
 import com.example.demo.vo.ArticleAddVo;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-
 /**
- * 用户服务实现类
+ * 文章服务实现类
  */
 @Service
 @RequiredArgsConstructor
@@ -54,5 +45,14 @@ public class ArticleServiceImpl implements ArticleService {
         }
 
         return article.getId();
+    }
+
+    @Override
+    public Article getById(Long id) {
+        Article article = articleMapper.selectById(id);
+        if (article == null) {
+            throw new BusinessException(ResultCode.NOT_FOUND, "找不到文章");
+        }
+        return article;
     }
 }

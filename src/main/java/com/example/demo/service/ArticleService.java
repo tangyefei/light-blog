@@ -1,21 +1,26 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.LoginRequest;
-import com.example.demo.dto.LoginResponse;
-import com.example.demo.dto.RegisterRequest;
-import com.example.demo.entity.User;
+import com.example.demo.entity.Article;
 import com.example.demo.vo.ArticleAddVo;
 
 /**
- * 用户服务接口
+ * 文章服务接口
  */
 public interface ArticleService {
 
     /**
-     * 用户注册
+     * 新增文章
      *
-     * @param request 注册请求参数
+     * @param request 新增文章请求参数
+     * @return 新文章 ID
      */
     Long add(ArticleAddVo request);
 
+    /**
+     * 根据 ID 查询文章详情。
+     *
+     * @param id 文章 ID
+     * @return 文章详情
+     */
+    Article getById(Long id);
 }
