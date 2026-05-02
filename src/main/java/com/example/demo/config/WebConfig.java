@@ -26,8 +26,6 @@ public class WebConfig implements WebMvcConfigurer {
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 // 允许前端携带任意请求头，例如 Content-Type 和 Authorization。
                 .allowedHeaders("*")
-                // 如果响应里包含 Authorization，允许前端代码读取该响应头。
-                .exposedHeaders("Authorization")
                 // 允许请求携带凭证信息，例如 Cookie 或认证相关请求头。
                 .allowCredentials(true)
                 // 预检请求结果缓存 3600 秒，减少浏览器重复发送 OPTIONS 请求。
