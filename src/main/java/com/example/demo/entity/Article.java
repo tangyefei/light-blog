@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.baomidou.mybatisplus.core.handlers.MybatisEnumTypeHandler;
 import com.example.demo.enums.ArticleStatus;
 import lombok.Data;
 
@@ -25,7 +24,6 @@ public class Article {
     private Long userId;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    @TableField(typeHandler = MybatisEnumTypeHandler.class)
     private ArticleStatus status;
     @TableField("is_deleted")
     @TableLogic(value = "0", delval = "1")
