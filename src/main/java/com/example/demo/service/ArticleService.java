@@ -1,6 +1,8 @@
 package com.example.demo.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.example.demo.vo.ArticleAddVo;
+import com.example.demo.vo.ArticleQueryVo;
 import com.example.demo.vo.ArticleResponseVo;
 
 /**
@@ -15,6 +17,14 @@ public interface ArticleService {
      * @return 新文章 ID
      */
     Long add(ArticleAddVo request);
+
+    /**
+     * 分页查询文章列表。
+     *
+     * @param request 查询条件
+     * @return 文章分页列表
+     */
+    IPage<ArticleResponseVo> page(ArticleQueryVo request);
 
     /**
      * 根据 ID 查询文章详情。

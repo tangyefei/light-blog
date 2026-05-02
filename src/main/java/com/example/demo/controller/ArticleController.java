@@ -1,8 +1,10 @@
 package com.example.demo.controller;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.example.demo.common.Result;
 import com.example.demo.service.ArticleService;
 import com.example.demo.vo.ArticleAddVo;
+import com.example.demo.vo.ArticleQueryVo;
 import com.example.demo.vo.ArticleResponseVo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -26,6 +28,13 @@ public class ArticleController {
     public Result<Long> add(@Valid @RequestBody ArticleAddVo request) {
         Long id = articleService.add(request);
         return Result.success(id);
+    }
+
+    @GetMapping("/page")
+    @Operation(summary = "分页查询文章列表", description = "按条件分页查询文章列表")
+    public Result<IPage<ArticleResponseVo>> page(@Valid ArticleQueryVo request) {
+        IPage<ArticleResponseVo> page = articleService.page(request);
+        return Result.success(page);
     }
 
     @GetMapping("/{id}")

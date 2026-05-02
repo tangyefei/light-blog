@@ -1,6 +1,8 @@
 package com.example.demo.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.demo.common.BusinessException;
 import com.example.demo.common.ResultCode;
 import com.example.demo.context.UserContext;
@@ -15,10 +17,12 @@ import com.example.demo.mapper.TagMapper;
 import com.example.demo.mapper.UserMapper;
 import com.example.demo.service.ArticleService;
 import com.example.demo.vo.ArticleAddVo;
+import com.example.demo.vo.ArticleQueryVo;
 import com.example.demo.vo.ArticleResponseVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -57,6 +61,23 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
+    public IPage<ArticleResponseVo> page(ArticleQueryVo request) {
+        Page<Article> page = new Page<>(request.getPageNum(), request.getPageSize());
+        LambdaQueryWrapper<Article> query = new LambdaQueryWrapper<Article>()
+                // 标题有值时，按标题进行模糊查询。
+                .like(StringUtils.hasText(request.getTitle()), Article::getTitle, request.getTitle())
+                // 分类 ID 有值时，只查询该分类下的文章。
+                .eq(request.getCategoryId() != null, Article::getCategoryId, request.getCategoryId())
+                .eq(request.getTagId() != null, Article::getId, request.getTagId())
+                // 状态有值时，将前端状态值转换为枚举后再查询。
+                .eq(request.getStatus() != null, Article::getStatus, request.getStatus() == null ? null : ArticleStatus.fromCode(request.getStatus()))
+                .orderByDesc(Article::getCreatedAt);
+
+        Page<Article> articlePage = articleMapper.selectPage(page, query);
+        return articlePage.convert(this::toArticleResponseVo);
+    }
+
+    @Override
     public ArticleResponseVo getById(Long id) {
         Article article = articleMapper.selectById(id);
         if (article == null) {
@@ -77,11 +98,28 @@ public class ArticleServiceImpl implements ArticleService {
         User user = userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getId, article.getUserId()));
         articleResponse.setUserName(user.getUsername());
 
-//        Article updateArticle = new Article();
-//        updateArticle.setId(id);
-//        updateArticle.setViews(article.getViews() + 1);
-//        articleMapper.updateById(updateArticle);
         articleMapper.increaseViews(id);
+
+        return articleResponse;
+    }
+
+    private ArticleResponseVo toArticleResponseVo(Article article) {
+        ArticleResponseVo articleResponse = new ArticleResponseVo();
+        BeanUtils.copyProperties(article, articleResponse);
+
+        List<ArticleTag> articleTags = articleTagMapper.selectList(
+                new LambdaQueryWrapper<ArticleTag>().eq(ArticleTag::getArticleId, article.getId())
+        );
+        List<Long> tagIds = articleTags.stream()
+                .map(ArticleTag::getTagId)
+                .toList();
+        List<Tag> tags = tagIds.isEmpty() ? List.of() : tagMapper.selectByIds(tagIds);
+        articleResponse.setTags(tags.toArray(new Tag[0]));
+
+        User user = userMapper.selectById(article.getUserId());
+        if (user != null) {
+            articleResponse.setUserName(user.getUsername());
+        }
 
         return articleResponse;
     }
