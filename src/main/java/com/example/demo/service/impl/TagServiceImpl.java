@@ -10,6 +10,8 @@ import com.example.demo.vo.TagAddVo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * 标签服务实现类。
  */
@@ -18,6 +20,11 @@ import org.springframework.stereotype.Service;
 public class TagServiceImpl implements TagService {
 
     private final TagMapper tagMapper;
+
+    @Override
+    public List<Tag> findAll() {
+        return tagMapper.selectList(new LambdaQueryWrapper<Tag>().orderByAsc(Tag::getId));
+    }
 
     @Override
     public Long add(TagAddVo request) {
