@@ -27,6 +27,10 @@ public class JwtInterceptor implements HandlerInterceptor {
             return true;
         }
 
+        if (isPublicGetRequest(request)) {
+            return true;
+        }
+
         String token = request.getHeader("Authorization");
 
         // token 为空直接拒绝
@@ -63,5 +67,25 @@ public class JwtInterceptor implements HandlerInterceptor {
         response.setStatus(ResultCode.UNAUTHORIZED.getCode());
         response.setContentType("application/json;charset=UTF-8");
         response.getWriter().write(objectMapper.writeValueAsString(Result.fail(ResultCode.UNAUTHORIZED)));
+    }
+
+    /**
+     * 博客公开浏览接口允许游客访问，写操作和个人文章接口仍需要 JWT。
+     */
+    private boolean isPublicGetRequest(HttpServletRequest request) {
+        if (!"GET".equalsIgnoreCase(request.getMethod())) {
+            return false;
+        }
+
+        String path = request.getRequestURI();
+        String contextPath = request.getContextPath();
+        if (contextPath != null && !contextPath.isBlank() && path.startsWith(contextPath)) {
+            path = path.substring(contextPath.length());
+        }
+
+        return "/api/articles/page".equals(path)
+                || path.matches("^/api/articles/\\d+$")
+                || "/api/categories".equals(path)
+                || "/api/tags".equals(path);
     }
 }
