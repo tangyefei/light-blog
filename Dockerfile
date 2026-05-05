@@ -13,14 +13,10 @@ WORKDIR /workspace
 COPY pom.xml ./
 COPY settings.xml settings.xml
 
-# 预下载依赖，提升后续构建速度。
-# 如果你使用的是公司私服或特殊 Maven settings，可以在构建时额外挂载 settings.xml。
-RUN --mount=type=cache,target=/root/.m2 mvn -B -s settings.xml dependency:go-offline
-
 # 复制源码并打包。
 COPY src src
 
-# 跳过测试以加快镜像构建；CI 场景建议在构建镜像前单独运行完整测试。
+# 跳过测试以加快镜像构建；Maven 本地仓库使用 BuildKit cache，避免后续重建重复下载依赖。
 RUN --mount=type=cache,target=/root/.m2 mvn -B -s settings.xml -DskipTests package
 
 # -------------------------
