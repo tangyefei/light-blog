@@ -1,0 +1,19 @@
+# Maven/Java 构建产物，镜像内会重新编译，不需要发送给 Docker daemon。
+target/
+build/
+
+# 本地 IDE 与编辑器配置。
+.idea/
+.vscode/
+*.iml
+
+# Git 元数据不参与镜像构建。
+.git/
+.gitignore
+
+# 本地环境变量可能包含数据库密码、JWT 密钥等敏感信息。
+.env
+
+# 日志和临时文件。
+*.log
+tmp/

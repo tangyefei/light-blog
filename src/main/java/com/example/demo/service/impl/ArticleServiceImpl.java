@@ -33,6 +33,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+
+
 /**
  * 文章服务实现类
  */
@@ -200,7 +202,7 @@ public class ArticleServiceImpl implements ArticleService {
         articleResponse.setUserName(user.getUsername());
 
         articleMapper.increaseViews(id);
-        setCache(cacheKey, articleResponse);
+//        setCache(cacheKey, articleResponse);
 
         return articleResponse;
     }
@@ -233,7 +235,6 @@ public class ArticleServiceImpl implements ArticleService {
     private <T> T getCache(String key, Class<T> type) {
         try {
             // 根据缓存 key 从 Redis 中读取 JSON 字符串。
-            // opsForValue() 表示操作 Redis 的 String 类型数据，对应 Redis 命令中的 GET/SET 这类 key-value 操作。
             String value = stringRedisTemplate.opsForValue().get(key);
             // Redis 中没有对应数据时，返回 null，调用方继续查数据库。
             if (!StringUtils.hasText(value)) {
@@ -252,7 +253,6 @@ public class ArticleServiceImpl implements ArticleService {
     private void setCache(String key, Object value) {
         try {
             // 将 Java 对象序列化为 JSON 字符串，并写入 Redis，同时设置过期时间。
-            // opsForValue() 表示操作 Redis 的 String 类型数据，这里相当于 SET key value EX ttl。
             stringRedisTemplate.opsForValue().set(key, objectMapper.writeValueAsString(value), ARTICLE_CACHE_TTL);
         } catch (Exception ignored) {
             // 缓存写入失败不影响主流程，接口仍然返回数据库查询结果。
