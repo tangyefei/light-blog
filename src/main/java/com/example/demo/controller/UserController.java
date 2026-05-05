@@ -48,6 +48,7 @@ public class UserController {
     public Result<User> me() {
         Long userId = UserContext.getUserId();
         User user = userService.getById(userId);
+        user.setGreeting("hello");
         return Result.success(user);
 
     }
