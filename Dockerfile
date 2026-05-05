@@ -13,16 +13,17 @@ WORKDIR /workspace
 COPY pom.xml ./
 COPY .mvn .mvn
 COPY mvnw mvnw
+COPY settings.xml settings.xml
 
 # 预下载依赖，提升后续构建速度。
 # 如果你使用的是公司私服或特殊 Maven settings，可以在构建时额外挂载 settings.xml。
-RUN ./mvnw -B dependency:go-offline
+RUN --mount=type=cache,target=/root/.m2 ./mvnw -B -s settings.xml dependency:go-offline
 
 # 复制源码并打包。
 COPY src src
 
 # 跳过测试以加快镜像构建；CI 场景建议在构建镜像前单独运行完整测试。
-RUN ./mvnw -B -DskipTests package
+RUN --mount=type=cache,target=/root/.m2 ./mvnw -B -s settings.xml -DskipTests package
 
 # -------------------------
 # 运行阶段：只保留 JRE 和最终 JAR，减小镜像体积
