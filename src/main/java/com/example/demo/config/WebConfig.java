@@ -20,8 +20,13 @@ public class WebConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
         // 对所有后端接口启用跨域配置。
         registry.addMapping("/**")
-                // 允许本地前端开发服务访问后端接口，兼容 3000 被占用后 Next.js 自动切换端口的情况。
-                .allowedOriginPatterns("http://localhost:*", "http://127.0.0.1:*")
+                // 允许本地前端开发服务和生产域名访问后端接口。
+                .allowedOriginPatterns(
+                        "http://localhost:*",
+                        "http://127.0.0.1:*",
+                        "http://groundedglow.cc",
+                        "https://groundedglow.cc"
+                )
                 // 允许前端使用常见的接口请求方法，并允许浏览器预检请求。
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 // 允许前端携带任意请求头，例如 Content-Type 和 Authorization。
