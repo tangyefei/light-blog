@@ -8,22 +8,20 @@ FROM maven:3.9-eclipse-temurin-17 AS builder
 # 统一工作目录，后续 COPY/RUN 都基于这里执行。
 WORKDIR /workspace
 
-# 先复制 Maven 描述文件和 wrapper 相关文件。
+# 先复制 Maven 描述文件和 Maven settings。
 # 这样依赖下载可以被 Docker 层缓存，业务代码变化时无需每次重新下载全部依赖。
 COPY pom.xml ./
-COPY .mvn .mvn
-COPY mvnw mvnw
 COPY settings.xml settings.xml
 
 # 预下载依赖，提升后续构建速度。
 # 如果你使用的是公司私服或特殊 Maven settings，可以在构建时额外挂载 settings.xml。
-RUN --mount=type=cache,target=/root/.m2 ./mvnw -B -s settings.xml dependency:go-offline
+RUN --mount=type=cache,target=/root/.m2 mvn -B -s settings.xml dependency:go-offline
 
 # 复制源码并打包。
 COPY src src
 
 # 跳过测试以加快镜像构建；CI 场景建议在构建镜像前单独运行完整测试。
-RUN --mount=type=cache,target=/root/.m2 ./mvnw -B -s settings.xml -DskipTests package
+RUN --mount=type=cache,target=/root/.m2 mvn -B -s settings.xml -DskipTests package
 
 # -------------------------
 # 运行阶段：只保留 JRE 和最终 JAR，减小镜像体积
