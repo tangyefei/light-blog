@@ -39,9 +39,10 @@ public class ExerciseServiceImpl implements ExerciseService {
             existing.setExerciseId(exerciseId);
         }
 
-        existing.setGroupIndex(vo.getGroupIndex() != null ? vo.getGroupIndex() : (existing.getGroupIndex() != null ? existing.getGroupIndex() : 0));
-        existing.setAnswer(vo.getAnswer());
-        existing.setCorrect(vo.getCorrect() != null ? vo.getCorrect() : false);
+        existing.setGroupId(vo.getGroupId() != null ? vo.getGroupId() : (existing.getGroupId() != null ? existing.getGroupId() : ""));
+        existing.setAnswer(vo.getUserAnswer());
+        existing.setCorrect(vo.getIsCorrect() != null ? vo.getIsCorrect() : false);
+        existing.setIsSkipped(vo.getIsSkipped() != null ? vo.getIsSkipped() : false);
         existing.setSubmittedAt(LocalDateTime.now());
 
         if (isNew) mapper.insert(existing);

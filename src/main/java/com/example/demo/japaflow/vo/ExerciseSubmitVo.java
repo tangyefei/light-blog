@@ -4,7 +4,8 @@ import lombok.Data;
 
 @Data
 public class ExerciseSubmitVo {
-    private Integer groupIndex;
-    private String answer;
-    private Boolean correct;
+    private String groupId;
+    private String userAnswer;
+    private Boolean isCorrect;
+    private Boolean isSkipped;
 }

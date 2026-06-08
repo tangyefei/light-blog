@@ -16,9 +16,11 @@ public class JfExerciseResult {
     private Long userId;
     private Integer lessonId;
     private String exerciseId;
+    private String groupId;
     private Integer groupIndex;
 
     private String answer;
     private Boolean correct;
+    private Boolean isSkipped;
     private LocalDateTime submittedAt;
 }
