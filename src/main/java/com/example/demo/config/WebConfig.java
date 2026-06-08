@@ -25,7 +25,8 @@ public class WebConfig implements WebMvcConfigurer {
                         "http://localhost:*",
                         "http://127.0.0.1:*",
                         "http://groundedglow.cc",
-                        "https://groundedglow.cc"
+                        "https://groundedglow.cc",
+                        "https://*.groundedglow.cc"
                 )
                 // 允许前端使用常见的接口请求方法，并允许浏览器预检请求。
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
